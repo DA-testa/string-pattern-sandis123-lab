@@ -1,44 +1,32 @@
 # python3
 
 def read_input():
-    data = input()
-    if data[0]=="I":
-        pattern=input()
-        text = inpit()
-     elif data[0]=="F":
-        inputf = '06'
-        inputf = "tests/" + inputf
-       
-        with open(inputf, 'r') as file:
-                pattern, text = file.read().splitlines()
-    return (pattern.rstrip(), text.rstrip())
+   choice = input()
+if "I" in choice[:1]:
+    text = input().rstrip()
+    pattern = input().rstrip()
+    
+ elif "F" in choice:
+     with open("./tests/06", "r") as file:
+          text = file.readline().rstrip()
+          pattern = file.readline().rstrip()
+            
+    return (text, pattern)
 
 def print_occurrences(output):
-            
-        
-    # this function needs to aquire input both from keyboard and file
-    # as before, use capital i (input from keyboard) and capital f (input from file) to choose which input type will follow
-     print(' '.join(map(str, output)))
-def get_occurrences(pattern, text):
-    lP = len(pattern)
-    lT = len(text)
-    hP = hash(pattern)
-    hT = hash(text[:lP])
-    output = []
-    for i in range(lT-lP+1):
-        if hP == hT:
-            if pattern == text[i:i+lP]:
-                output.append(i)
-            else:
-                for j in range(lP):
-                    if text[i+j] != pattern[j]:
-                        break
-                else:
-                    output.append(i)
-        if i < lT-lP:
-            hT = hash(text[i+1:i+lP+1])
-    return output
     
+    print(' '.join(map(str, output)))
+def get_occurrences(pattern, text):
+     occurances = []
+     pattern_len = len(pattern)
+     text_len = len(text)
+     for i in range(text_len - pattern_len + 1):
+         text1 = text[i:i + pattern_len]
+         if hash(text1) == hash(pattern):
+            occurances.append(i)
+            return occurances
+    # this function needs to aquire input both from keyboard and file
+    # as before, use capital i (input from keyboard) and capital f (input from file) to choose which input type will follow 
     # after input type choice
     # read two lines 
     # first line is pattern 
