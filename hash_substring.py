@@ -1,76 +1,54 @@
 # python3
-class Query:
 
-    def __init__(self, query):
-        self.type = query[0]
-        if self.type == 'check':
-            self.ind = int(query[1])
-        else:
-            self.s = query[1]
-class QueryProcessor:
-    _multiplier = 263
-    _prime = 1000000007
+def read_input():
+    data = input()
+    if data[0]=="I":
+        pattern=input()
+        text = inpit()
+     elif data[0]=="F":
+        inputf = '06'
+        inputf = "tests/" + inputf
+       
+        with open(inputf, 'r') as file:
+                pattern, text = file.read().splitlines()
+    return (pattern.rstrip(), text.rstrip())
 
-    def __init__(self, bucket_count):
-        self.bucket_count = bucket_count
-        self.elems = {}
-
-    def _hash_func(self, s):
-        ans = 0
-        for c in reversed(s):
-            ans = (ans * self._multiplier + ord(c)) % self._prime
-        return ans % self.bucket_count
-
-    def write_search_result(self, was_found):
-        print('yes' if was_found else 'no')
-
-    def write_chain(self, chain):
-        print(' '.join(chain))
-
-    def read_query(self):
-        return Query(input().split())
-
-    def process_query(self, query):
-        if query.type == "check":
-            if query.ind in self.elems:
-                for elem in reversed(self.elems[query.ind]):  
-                    print(elem, end=" ")
-                print("")
-            else:  
-                print("")
-        else:
-            if query.type == 'find':
-                hash_num = self._hash_func(query.s)
-                if hash_num in self.elems:
-                    if query.s in self.elems[hash_num]:
-                        print("yes")
-                    else:
-                        print("no")
-                else:  # print no
-                    print("no")
-            elif query.type == 'add':
-                hash_num = self._hash_func(query.s)
-               
-                if hash_num in self.elems:
-                    
-                    if query.s not in self.elems[hash_num]:
-                        self.elems[hash_num].append(query.s)
-                else:  
-                    self.elems[hash_num] = [query.s]
-            else:  
-                hash_num = self._hash_func(query.s)
-                if hash_num in self.elems:
-                    for i in range(len(self.elems[hash_num])):
-                        if self.elems[hash_num][i] == query.s:
-                            self.elems[hash_num].pop(i)
-                            break
-                    if len(self.elems[hash_num]) == 0:
-                        del self.elems[hash_num]
-    def process_queries(self):
-        n = int(input())
-        for i in range(n):
-            self.process_query(self.read_query())
+def print_occurrences(output):
+            
+        
+    # this function needs to aquire input both from keyboard and file
+    # as before, use capital i (input from keyboard) and capital f (input from file) to choose which input type will follow
+     print(' '.join(map(str, output)))
+def get_occurrences(pattern, text):
+    lP = len(pattern)
+    lT = len(text)
+    hP = hash(pattern)
+    hT = hash(text[:lP])
+    output = []
+    for i in range(lT-lP+1):
+        if hP == hT:
+            if pattern == text[i:i+lP]:
+                output.append(i)
+            else:
+                for j in range(lP):
+                    if text[i+j] != pattern[j]:
+                        break
+                else:
+                    output.append(i)
+        if i < lT-lP:
+            hT = hash(text[i+1:i+lP+1])
+    return output
+    
+    # after input type choice
+    # read two lines 
+    # first line is pattern 
+    # second line is text in which to look for pattern 
+    # return both lines in one return
+    # this is the sample return, notice the rstrip function
+    # this function should control output, it doesn't need any return
+    # this function should find the occurances using Rabin Karp alghoritm 
+    # and return an iterable variable
+  
+# this part launches the functions
 if __name__ == '__main__':
-    bucket_count = int(input())
-    proc = QueryProcessor(bucket_count)
-    proc.process_queries()
+    print_occurrences(get_occurrences(*read_input()))
